@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPDS - Suspicious Packet Detection System</title>
+    <!-- Fonts & CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="brand">
+                <h1>Suspicious Packet Detection System</h1>
+                <p>Real-Time Network Intrusion & Anomaly Detection</p>
+            </div>
+            <div class="header-actions">
+                <div class="status-indicator">
+                    <span id="statusDot" class="dot"></span>
+                    <span id="statusText">Capture Offline</span>
+                </div>
+                <button id="clearDbBtn" class="btn btn-secondary">Clear Database</button>
+            </div>
+        </header>
+
+        <!-- Controls Grid: Live Capture & PCAP Upload -->
+        <div class="controls-grid">
+            <!-- Live Capture Card -->
+            <div class="card">
+                <div class="card-title">Live Capture Control</div>
+                <div class="form-group">
+                    <label for="interfaceSelect">Network Interface</label>
+                    <select id="interfaceSelect">
+                        <option value="">Loading interfaces...</option>
+                    </select>
+                </div>
+                <div class="button-group">
+                    <button id="startCaptureBtn" class="btn btn-primary">Start Live Capture</button>
+                    <button id="stopCaptureBtn" class="btn btn-danger" disabled>Stop Capture</button>
+                </div>
+            </div>
+
+            <!-- PCAP Upload Card -->
+            <div class="card">
+                <div class="card-title">PCAP File Upload and Replay</div>
+                <form id="pcapForm" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="pcapFileInput">Packet Capture File (.pcap / .pcapng)</label>
+                        <input type="file" id="pcapFileInput" accept=".pcap,.pcapng" required>
+                    </div>
+                    <div class="button-group">
+                        <button type="submit" id="uploadPcapBtn" class="btn btn-secondary">Process and Analyze PCAP</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Stats Grid Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Total Alerts</div>
+                <div id="statTotalAlerts" class="stat-value">0</div>
+                <div class="stat-desc">Detected since startup</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Critical and High Risk</div>
+                <div id="statCriticalHigh" class="stat-value risk-critical-text">0</div>
+                <div class="stat-desc">Immediate action required</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Medium Risk Alerts</div>
+                <div id="statMedium" class="stat-value risk-medium-text">0</div>
+                <div class="stat-desc">Suspicious traffic / bursts</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Top Attack Source IP</div>
+                <div id="statTopIp" class="stat-value risk-low-text" style="font-size: 20px;">None</div>
+                <div class="stat-desc" id="statTopIpCount">0 alerts</div>
+            </div>
+        </div>
+
+        <!-- Activity Chart Card -->
+        <div class="card chart-card">
+            <div class="card-title">Detection Activity and Alert Trends</div>
+            <div class="chart-container">
+                <canvas id="alertChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Live Alerts Table Card -->
+        <div class="card table-card">
+            <div class="table-header">
+                <div class="card-title" style="margin-bottom:0;">Recent Alerts Log</div>
+                <input type="text" id="searchInput" class="search-box" placeholder="Filter alerts by IP, type...">
+            </div>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Timestamp</th>
+                            <th>Alert Type</th>
+                            <th>Risk Level</th>
+                            <th>Source IP</th>
+                            <th>Destination IP</th>
+                            <th>Alert Details</th>
+                        </tr>
+                    </thead>
+                    <tbody id="alertsTableBody">
+                        <tr>
+                            <td colspan="7" class="empty-state">No alerts recorded yet. Start live capture or upload a PCAP file.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard JavaScript -->
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>
